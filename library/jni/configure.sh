@@ -40,10 +40,11 @@ for version in $TARGET_ARCHS; do
 	FLAGS="$FLAGS --enable-zlib "
     FLAGS="$FLAGS --enable-decoder=mp3 --enable-decoder=mp3adu --enable-decoder=mp3adufloat \
                   --enable-decoder=mp3float --enable-decoder=mp3on4 --enable-decoder=mp3on4floats \
-                  --enable-decoder=aac --enable-decoder=aac_latm --enable-decoder=ac3"
+                  --enable-decoder=aac --enable-decoder=aac_latm --enable-decoder=ac3 \
+                  --enable-decoder=vorbis --enable-decoder=xwma"
 	FLAGS="$FLAGS --enable-protocol=http --enable-protocol=tcp --enable-network --enable-protocol=applehttp \
 	              --enable-protocol=rtp  --enable-protocol=udp --enable-protocol=md5 --enable-protocol=concat \
-	              --enable-protocol=file --enable-protocol=crypto --enable-protocol=pipe --enable-protocol=rtsp"
+	              --enable-protocol=file --enable-protocol=crypto --enable-protocol=pipe --enable-protocol=rtsp --enable-protocol=mmsh"
 	FLAGS="$FLAGS --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=aac --enable-demuxer=applehttp \
 	              --enable-demuxer=mpegts --enable-demuxer=ogg --enable-demuxer=rtsp"
     FLAGS="$FLAGS --enable-parser=mpegaudio --enable-parser=aac --enable-parser=aac_latm "
