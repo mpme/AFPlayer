@@ -11,7 +11,7 @@
  * You should have received a copy of the GNU General Public License along with Sveriges Radio Play for Android. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package dk.nordfalk.netradio;
+package com.mpme.sample;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 /**
  * @author j
  */
-public class Afspiller_akt extends Activity implements OnClickListener {
+public class MyActivity extends Activity implements OnClickListener {
 
     private Button startStopKnap;
     private TextView tv;
@@ -249,7 +249,7 @@ public class Afspiller_akt extends Activity implements OnClickListener {
                                     "\nTid start->data: " + (tid_førsteData - tid_brugerTrykketStart) / 1000f +
                                     "\nTid start->lyd:  " + (tid_spiller - tid_brugerTrykketStart) / 1000f;
 
-                            AlertDialog.Builder dialog = new AlertDialog.Builder(Afspiller_akt.this);
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(MyActivity.this);
                             //dialog.setTitle("En AlertDialog");
                             dialog.setMessage(txt);
                             dialog.setPositiveButton("OK", null);

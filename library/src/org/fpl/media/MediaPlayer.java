@@ -1,7 +1,7 @@
 package org.fpl.media;
 
 import android.net.Uri;
-import dk.nordfalk.netradio.Log;
+import android.util.Log;
 
 // import android.util.Log;
 

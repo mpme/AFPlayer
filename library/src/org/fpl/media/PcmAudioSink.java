@@ -7,7 +7,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Handler;
-import dk.nordfalk.netradio.Log;
+import android.util.Log;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class PcmAudioSink {
                 return b;
             }
         }
-        Log.d("getFreeBuffer OPRETTER NY");
+        Log.d(TAG, "getFreeBuffer OPRETTER NY");
         return new byte[length];
     }
 
@@ -90,7 +90,7 @@ public class PcmAudioSink {
             if (!taken)
                 throw new IllegalStateException(" not taken ??!?");
         } catch (Exception ex) {
-            Log.e(ex);
+            Log.e(TAG, ex.getMessage(), ex);
             result = -1;
         }
         bytesInBuffer += length;
@@ -104,7 +104,7 @@ public class PcmAudioSink {
                     try {
                         write();
                     } catch (InterruptedException ex) {
-                        Log.e(ex);
+                        Log.e(TAG, ex.getMessage(), ex);
                         result = -1;
                     }
             }

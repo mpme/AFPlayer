@@ -5,6 +5,6 @@
         android:versionName="1.0"
         package="org.fpl">
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="16"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16"/>
 
 </manifest>
