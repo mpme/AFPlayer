@@ -108,6 +108,7 @@ public class MediaPlayer {
      * Not needed. Is here for compatibility
      */
     public void prepare() throws IllegalStateException {
+
     }
 
     /**
@@ -197,9 +198,8 @@ public class MediaPlayer {
 
     }
 
-    public int streamSetupCallback(int sampleRate) {
-        sink.setSampleRateInHz(sampleRate);
-
+    public int streamSetupCallback(int sampleRate, int channels) {
+        sink.init(sampleRate, channels);
         return 0;
     }
 

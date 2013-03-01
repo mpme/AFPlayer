@@ -259,8 +259,9 @@ int MikesFfmpegPlayer::do_play() {
 	int ret_status;
 
 	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Sample Rate: %d", codecCtx->sample_rate);
+	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Number of channels: %d", codecCtx->channels);
 
-	int ret = stream_env->CallIntMethod(stream_object, stream_setup_callback, codecCtx->sample_rate);
+	int ret = stream_env->CallIntMethod(stream_object, stream_setup_callback, codecCtx->sample_rate, codecCtx->channels);
 	if (ret != 0) {
 	   __android_log_print(ANDROID_LOG_DEBUG, TAG, "Cannot call setup method");
 	}
@@ -423,7 +424,7 @@ JNIEXPORT void JNICALL Java_org_fpl_media_MediaPlayer_n_1playStream(JNIEnv *env,
 			__android_log_print(ANDROID_LOG_ERROR, TAG, "Cannot get class");
 		}
 
-		p.stream_setup_callback = env->GetMethodID(cls, "streamSetupCallback", "(I)I");
+		p.stream_setup_callback = env->GetMethodID(cls, "streamSetupCallback", "(II)I");
 		if (!p.stream_setup_callback) {
 		   __android_log_print(ANDROID_LOG_ERROR, TAG, "Cannot get setup callback method");
 		}

@@ -34,7 +34,7 @@ public class PcmAudioSink {
     public PcmAudioSink() {
 
         Log.d(TAG, "Init new PcmAudioSink");
-        setSampleRateInHz(getSampleRateInHz());
+
         int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_STEREO;
         int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -55,9 +55,13 @@ public class PcmAudioSink {
 
     }
 
-    private void init() {
+    public void init(int sampleRate, int channels) {
         Log.d(TAG, "Call PcmAudioSink Init");
-        int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_STEREO;
+
+        setSampleRateInHz(sampleRate);
+        setChannelsCount(channels);
+
+        int channelConfig = channels > 1? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO;
         int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
         int minBufSize = AudioTrack.getMinBufferSize(getSampleRateInHz(), channelConfig, audioFormat);
         if (minBufSize <= 0) {
@@ -138,6 +142,7 @@ public class PcmAudioSink {
 
     boolean stop = false;
     private int sampleRateInHz = 44100; // Default sample rate
+    private int channelsCount = 1;
 
     void stopPlay() {
         stop = true;
@@ -155,7 +160,14 @@ public class PcmAudioSink {
 
     public void setSampleRateInHz(int sampleRateInHz) {
         this.sampleRateInHz = sampleRateInHz;
-        init();
+    }
+
+    public int getChannelsCount() {
+        return channelsCount;
+    }
+
+    public void setChannelsCount(int channels) {
+        this.channelsCount = channels;
     }
 
     public void setHandler(Handler handler) {
