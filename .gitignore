@@ -5,10 +5,14 @@ obj
 libs
 .settings/
 bin/
-gen/
+gen
 local.properties
 /nbandroid/
 /ant.properties
 jni/xxx.map
 libs/armeabi/libffmpeg.so
 /jni/AFPlayer-jni/nbproject/private/
+.idea
+*.iml
+out
+jni/*.tar.gz
