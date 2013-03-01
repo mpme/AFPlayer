@@ -18,41 +18,33 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class PcmAudioSink {
 
-    private static final String TAG = "PcmAudioSink";
-    Handler handler;
-    Runnable runWhenPcmAudioSinkWrite;
-    AudioTrack track;
+    public static final Integer PREFERRED_BUFFER_IN_SECONDS = 9;
+    public static final Integer MAX_BUFFER_IN_SECONDS = 40;
 
-    int bytesPerSecond;
-    final int preferredBufferInSeconds = 9;
-    final int maxBufferInSeconds = 40;
-    LinkedBlockingQueue<byte[]> buffersInUse = new LinkedBlockingQueue<byte[]>();
-    int bytesInBuffer = 0;
-    ArrayList<SoftReference<byte[]>> buffersNotInUse = new ArrayList<SoftReference<byte[]>>();
-    int result;
+    private static final String TAG = "PcmAudioSink";
+
+    private Handler handler;
+    private Runnable runWhenPcmAudioSinkWrite;
+    private AudioTrack track;
+    private Integer bytesPerSecond;
+    private LinkedBlockingQueue<byte[]> buffersInUse;
+    private ArrayList<SoftReference<byte[]>> buffersNotInUse;
+
+    private Integer bytesInBuffer;
+    private boolean stop;
+    private Integer sampleRateInHz;
+    private Integer channelsCount;
+
+    public Integer result;
 
     public PcmAudioSink() {
-
-        Log.d(TAG, "Init new PcmAudioSink");
-
-        int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_STEREO;
-        int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-
-        int minBufSize = AudioTrack.getMinBufferSize(getSampleRateInHz(), channelConfig, audioFormat);
-        if (minBufSize <= 0)
-            throw new InternalError("Buffer size error: " + minBufSize);
-
-        int bufferSize = 176400; // minBufSize * 8
-        // int bufferSize = 86016;
-        track = new AudioTrack(AudioManager.STREAM_MUSIC, getSampleRateInHz(), channelConfig, audioFormat, bufferSize, AudioTrack.MODE_STREAM);
-
-        bytesPerSecond = track.getChannelCount() * track.getSampleRate()
-                * (track.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT ? 2 : 1);
-
-        Log.d("X " + bytesPerSecond + "  " + track.getChannelCount() + "  " + track.getSampleRate() + "  " + track.getAudioFormat());
-        Log.d("Manager", "Buffer size - min: " + minBufSize + "  - (" + minBufSize * 1000 / bytesPerSecond + " msecs)");
-        Log.d("Manager", "Buffer size - act: " + bufferSize + "  - (" + bufferSize * 1000 / bytesPerSecond + " msecs)");
-
+        buffersInUse = new LinkedBlockingQueue<byte[]>();
+        buffersNotInUse = new ArrayList<SoftReference<byte[]>>();
+        bytesInBuffer = 0;
+        stop = false;
+        sampleRateInHz = 44100;
+        channelsCount = 1;
+        result = 0;
     }
 
     public void init(int sampleRate, int channels) {
@@ -140,13 +132,11 @@ public class PcmAudioSink {
         }
     }
 
-    boolean stop = false;
-    private int sampleRateInHz = 44100; // Default sample rate
-    private int channelsCount = 1;
-
     void stopPlay() {
-        stop = true;
-        track.release();
+        if (track != null) {
+            stop = true;
+            track.release();
+        }
     }
 
     public String bufferInSecs() {
@@ -162,12 +152,12 @@ public class PcmAudioSink {
         this.sampleRateInHz = sampleRateInHz;
     }
 
-    public int getChannelsCount() {
-        return channelsCount;
-    }
-
     public void setChannelsCount(int channels) {
         this.channelsCount = channels;
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 
     public void setHandler(Handler handler) {
@@ -182,4 +172,11 @@ public class PcmAudioSink {
         return track;
     }
 
+    public Integer getBytesInBuffer() {
+        return bytesInBuffer;
+    }
+
+    public Integer getBytesPerSecond() {
+        return bytesPerSecond;
+    }
 }

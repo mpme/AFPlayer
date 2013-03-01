@@ -19,8 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.AudioTrack;
-import android.media.AudioTrack.OnPlaybackPositionUpdateListener;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -261,16 +259,16 @@ public class Afspiller_akt extends Activity implements OnClickListener {
                         }
                     }
                 });
-                mp.sink.getTrack().setPlaybackPositionUpdateListener(new OnPlaybackPositionUpdateListener() {
-                    public void onMarkerReached(AudioTrack arg0) {
-                        Log.d("XXXXXXXX onMarkerReached " + arg0.getPlaybackHeadPosition());
-                    }
-
-                    public void onPeriodicNotification(AudioTrack arg0) {
-                        Log.d("XXXXXX onPeriodicNotification ");
-                    }
-                }, handler);
-                Log.d("XXXXXX .setPlaybackPositionUpdateListener ");
+//                mp.sink.getTrack().setPlaybackPositionUpdateListener(new OnPlaybackPositionUpdateListener() {
+//                    public void onMarkerReached(AudioTrack arg0) {
+//                        Log.d("XXXXXXXX onMarkerReached " + arg0.getPlaybackHeadPosition());
+//                    }
+//
+//                    public void onPeriodicNotification(AudioTrack arg0) {
+//                        Log.d("XXXXXX onPeriodicNotification ");
+//                    }
+//                }, handler);
+//                Log.d("XXXXXX .setPlaybackPositionUpdateListener ");
                 mp.start();
 
                 if (holdTelefonVågen != null)

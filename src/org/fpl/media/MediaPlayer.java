@@ -1,7 +1,5 @@
 package org.fpl.media;
 
-import java.lang.ref.WeakReference;
-
 import android.net.Uri;
 import dk.nordfalk.netradio.Log;
 
@@ -90,7 +88,6 @@ public class MediaPlayer {
      * Set data source - stream url for now
      *
      * @param path   Stream URL
-     * @param foramt Stream format - skip format autodetection - faster start
      */
     public native void n_setDataSource(String path, String format);
 
@@ -142,7 +139,6 @@ public class MediaPlayer {
     /**
      * Set data source to be played back
      *
-     * @param context Activity context
      * @param uri     URI of the media resource
      * @throws IllegalStateException
      */
@@ -193,7 +189,7 @@ public class MediaPlayer {
     public void stop() throws IllegalStateException {
         // n_stopStream();
         if (isPlaying)
-            sink.track.stop();
+            sink.getTrack().stop();
         stopRequested = true;
 
     }
@@ -210,7 +206,7 @@ public class MediaPlayer {
      * @param length Length of the data in the array
      */
     public int streamCallback(byte[] data, int length) {
-        Log.d(TAG, "data:" + length + " buffer " + sink.bytesInBuffer + " b (" + sink.bufferInSecs() + " sek)");
+        Log.d(TAG, "data:" + length + " buffer " + sink.getBytesInBuffer() + " b (" + sink.bufferInSecs() + " sek)");
         try {
             if (stopRequested) {
                 isPlaying = false;
@@ -222,8 +218,8 @@ public class MediaPlayer {
                     data[i] += i % 5 * 15;
             }
 
-            if (sink.handler != null && getRunWhenstreamCallback() != null) {
-                sink.handler.post(getRunWhenstreamCallback());
+            if (sink.getHandler() != null && getRunWhenstreamCallback() != null) {
+                sink.getHandler().post(getRunWhenstreamCallback());
             }
 
             sink.putData(data, length);
@@ -231,7 +227,7 @@ public class MediaPlayer {
 
             if (!isPlaying()) {
 
-                if (sink.bytesInBuffer < sink.preferredBufferInSeconds * sink.bytesPerSecond) {
+                if (sink.getBytesInBuffer() < PcmAudioSink.PREFERRED_BUFFER_IN_SECONDS * sink.getBytesPerSecond()) {
                     return 0; // Not enough data, still bufferring
                 }
 
@@ -241,7 +237,7 @@ public class MediaPlayer {
             } else try {
 
                 // Wait if too much data
-                while (sink.bytesInBuffer > sink.maxBufferInSeconds * sink.bytesPerSecond) {
+                while (sink.getBytesInBuffer() > PcmAudioSink.MAX_BUFFER_IN_SECONDS * sink.getBytesPerSecond()) {
                     synchronized (sink) {
                         sink.wait(1000);
                     }
