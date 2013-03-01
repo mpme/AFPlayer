@@ -1,6 +1,6 @@
 jni/Default
-jni/build
 jni/ffmpeg
+jni/build
 obj
 libs
 .settings/
