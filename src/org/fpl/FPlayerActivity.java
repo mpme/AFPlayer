@@ -12,69 +12,69 @@ import android.widget.Button;
 
 public class FPlayerActivity extends Activity implements OnClickListener {
 
-	private static final String TAG = "FPlayer Activity";
-	private String shoutcast;
-	//private String rtsp;
-	//private Manager manager;
-	private String applehttp;
+    private static final String TAG = "FPlayer Activity";
+    private String shoutcast;
+    //private String rtsp;
+    //private Manager manager;
+    private String applehttp;
 
-	//private String LOCK = "LOCK";
-	private MediaPlayer mp;
-	private Button playBtn;
-	private Button stopBtn;
+    //private String LOCK = "LOCK";
+    private MediaPlayer mp;
+    private Button playBtn;
+    private Button stopBtn;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-		shoutcast = "http://live-icy.gss.dr.dk:8000/Channel3_LQ.mp3";
-		//rtsp = "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel3_LQ.stream";
-		applehttp = "http://live-http.gss.dr.dk/streaming/audio/Channel21/Channel21_LQ0.m3u8"; // "http://javabog.dk/privat/Channel21_LQ-20111031-110328-0025490.ts";
+        shoutcast = "http://live-icy.gss.dr.dk:8000/Channel3_LQ.mp3";
+        //rtsp = "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel3_LQ.stream";
+        applehttp = "http://live-http.gss.dr.dk/streaming/audio/Channel21/Channel21_LQ0.m3u8"; // "http://javabog.dk/privat/Channel21_LQ-20111031-110328-0025490.ts";
 
-		playBtn = (Button) findViewById(R.id.playBtn);
-		playBtn.setOnClickListener(this);
+        playBtn = (Button) findViewById(R.id.playBtn);
+        playBtn.setOnClickListener(this);
 
-		stopBtn = (Button) findViewById(R.id.stopBtn);
-		stopBtn.setOnClickListener(this);
+        stopBtn = (Button) findViewById(R.id.stopBtn);
+        stopBtn.setOnClickListener(this);
 
-		mp = MediaPlayer.create(Uri.parse(applehttp));
+        mp = MediaPlayer.create(Uri.parse(applehttp));
 
-	}
+    }
 
-	@Override
-	protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
 
-		if (mp.isPlaying()) {
-			mp.stop();
-		}
+        if (mp.isPlaying()) {
+            mp.stop();
+        }
 
-		if (mp != null) {
-			mp.release();
-		}
+        if (mp != null) {
+            mp.release();
+        }
 
-		super.onDestroy();
+        super.onDestroy();
 
-	}
+    }
 
-	@Override
-	public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
 
-		int id = v.getId();
-		switch (id) {
-		case R.id.playBtn:
-			Log.d(TAG, "Start stream");
-			mp.start();
-			break;
+        int id = v.getId();
+        switch (id) {
+            case R.id.playBtn:
+                Log.d(TAG, "Start stream");
+                mp.start();
+                break;
 
-		case R.id.stopBtn:
-			Log.d(TAG, "Stop stream");
-			mp.stop();
-			break;
+            case R.id.stopBtn:
+                Log.d(TAG, "Stop stream");
+                mp.stop();
+                break;
 
-		default:
-			break;
-		}
+            default:
+                break;
+        }
 
-	}
+    }
 }
