@@ -21,7 +21,7 @@ public class PcmAudioSink {
     public static final Integer PREFERRED_BUFFER_IN_SECONDS = 9;
     public static final Integer MAX_BUFFER_IN_SECONDS = 40;
 
-    private static final String TAG = "PcmAudioSink";
+    private static final String TAG = "CCC";
 
     private Handler handler;
     private Runnable runWhenPcmAudioSinkWrite;
@@ -73,16 +73,19 @@ public class PcmAudioSink {
             if (b == null) buffersNotInUse.remove(n); // Obj fjernet af garbage collector
             else if (b.length == length) {
                 buffersNotInUse.remove(n);
-                // Log.d("getFreeBuffer genbruger "+b);
+                Log.d(TAG,"getFreeBuffer recycle "+b);
                 return b;
             }
         }
-        Log.d(TAG, "getFreeBuffer OPRETTER NY");
+        Log.d(TAG, "getFreeBuffer create new");
         return new byte[length];
     }
 
     void putData(byte[] data, int length) {
+        Log.e(TAG, data.length+" "+length);
+
         byte[] buf = getFreeBuffer(length);
+        bytesInBuffer += length;
         System.arraycopy(data, 0, buf, 0, length);
         try {
             // Virker ikke: boolean taken = buffersInUse.offer(buf, 1000, TimeUnit.MILLISECONDS);
@@ -93,7 +96,7 @@ public class PcmAudioSink {
             Log.e(TAG, ex.getMessage(), ex);
             result = -1;
         }
-        bytesInBuffer += length;
+
     }
 
     void startPlay() {

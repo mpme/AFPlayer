@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class MediaPlayer {
 
-    private final static String TAG = "MediaPlayer";
+    private final static String TAG = "CCC";
 
     static {
         System.loadLibrary("player");
@@ -206,12 +206,14 @@ public class MediaPlayer {
      * @param length Length of the data in the array
      */
     public int streamCallback(byte[] data, int length) {
-        Log.d(TAG, "data:" + length + " buffer " + sink.getBytesInBuffer() + " b (" + sink.bufferInSecs() + " sek)");
+//        Log.d(TAG, "data:" + length + " buffer " + sink.getBytesInBuffer() + " b (" + sink.bufferInSecs() + " sek)");
         try {
             if (stopRequested) {
                 isPlaying = false;
                 return 1;
             }
+
+            if (length == 0) return 0;
 
             if (addBuzzTone) {
                 for (int i = 0; i < length; i += 151)
@@ -252,6 +254,9 @@ public class MediaPlayer {
 
             return 0;
 
+        } catch(Exception e) {
+            Log.e(TAG, "Exception", e);
+            return 0;
         } finally {
         }
     }

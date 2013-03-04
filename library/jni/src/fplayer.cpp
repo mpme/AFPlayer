@@ -258,6 +258,8 @@ int MikesFfmpegPlayer::do_play() {
 	//__android_log_print(ANDROID_LOG_DEBUG, TAG, "before start read frame");
 	int ret_status;
 
+	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Codec ID: %d", codecCtx->codec_id);
+	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Codec name: %s", codecCtx->codec->name);
 	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Sample Rate: %d", codecCtx->sample_rate);
 	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Number of channels: %d", codecCtx->channels);
 
@@ -270,8 +272,6 @@ int MikesFfmpegPlayer::do_play() {
 
 		if (codecCtx->codec_type == AVMEDIA_TYPE_AUDIO
 				&& avpkt.stream_index == audioStream) {
-
-
 
 			int frame_size = OUT_BUFFER_SIZE;
 			int size = avpkt.size;
@@ -288,8 +288,7 @@ int MikesFfmpegPlayer::do_play() {
 			}
 
 			while (size > 0) {
-				int len = avcodec_decode_audio3(codecCtx, (short *) samples,
-						&frame_size, &avpkt);
+				int len = avcodec_decode_audio3(codecCtx, (short *) samples, &frame_size, &avpkt);
 				if (len < 0) {
 					__android_log_print(ANDROID_LOG_ERROR, TAG,
 							"Error while decoding. Status/len: %d. Size: %d",
@@ -305,29 +304,35 @@ int MikesFfmpegPlayer::do_play() {
 					array = stream_env->NewByteArray(outputBufferSize);
 					outputBuffer = stream_env->GetByteArrayElements(array, NULL);
 				}
+				
+				__android_log_print(ANDROID_LOG_DEBUG, TAG, "outputBufferPos=%d. frame_size_ptr=%d. outputBufferSize=%d", outputBufferPos, frame_size, outputBufferSize);
+				
+				if (frame_size < outputBufferSize) 
+				{
+					int l = (outputBufferPos > frame_size)? frame_size : outputBufferPos;
 
-				// Flush the buffer to Java if it's full
-				if (outputBufferPos + frame_size > outputBufferSize) {
-					__android_log_print(ANDROID_LOG_DEBUG, TAG, "outputBufferPos=%d. frame_size_ptr=%d. outputBufferSize=%d", outputBufferPos, frame_size, outputBufferSize);
+					// Flush the buffer to Java if it's full
+					if (outputBufferPos + frame_size > outputBufferSize) {
 
-					stream_env->ExceptionClear();
-					int ret = stream_env->CallIntMethod(stream_object, stream_callback, array, outputBufferPos);
+						stream_env->ExceptionClear();
+						int ret = stream_env->CallIntMethod(stream_object, stream_callback, array, outputBufferPos);
 
-					if (ret == 1) { // STOP-signal
-						m_stoprequested = true;
+						if (ret == 1) { // STOP-signal
+							m_stoprequested = true;
+						}
+
+						__android_log_print(ANDROID_LOG_ERROR, TAG, "Flushed buffer to java");
+						outputBufferPos = 0;
+
+						if (m_stoprequested) {
+							break;
+						}
 					}
 
-					__android_log_print(ANDROID_LOG_ERROR, TAG, "Flushed buffer to java");
-					outputBufferPos = 0;
-
-					if (m_stoprequested) {
-						break;
-					}
+					memcpy((outputBuffer + outputBufferPos), (int16_t *) samples, frame_size);
+					outputBufferPos += frame_size;
+					size -= len;
 				}
-
-				memcpy((outputBuffer + outputBufferPos), (int16_t *) samples, frame_size);
-				outputBufferPos += frame_size;
-				size -= len;
 			}
 
 			av_free_packet(&avpkt);
