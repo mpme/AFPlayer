@@ -82,7 +82,6 @@ public class PcmAudioSink {
     }
 
     void putData(byte[] data, int length) {
-        Log.e(TAG, data.length+" "+length);
 
         byte[] buf = getFreeBuffer(length);
         bytesInBuffer += length;

@@ -305,7 +305,7 @@ int MikesFfmpegPlayer::do_play() {
 					outputBuffer = stream_env->GetByteArrayElements(array, NULL);
 				}
 				
-				__android_log_print(ANDROID_LOG_DEBUG, TAG, "outputBufferPos=%d. frame_size_ptr=%d. outputBufferSize=%d", outputBufferPos, frame_size, outputBufferSize);
+				// __android_log_print(ANDROID_LOG_DEBUG, TAG, "outputBufferPos=%d. frame_size_ptr=%d. outputBufferSize=%d", outputBufferPos, frame_size, outputBufferSize);
 				
 				if (frame_size < outputBufferSize) 
 				{
@@ -467,7 +467,7 @@ JNIEXPORT void JNICALL Java_org_fpl_media_MediaPlayer_n_1stopStream(JNIEnv *env,
 /**
  * Shutdown audio engine
  */
-JNIEXPORT void JNICALL Java_org_fpl_ffmpeg_Manager_shutdownEngine(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_fpl_media_MediaPlayer_n_1shutdownEngine(JNIEnv *env, jobject obj) {
     UNUSED(env);
     UNUSED(obj);
 	__android_log_write(ANDROID_LOG_DEBUG, TAG, "Shutdown engine");
